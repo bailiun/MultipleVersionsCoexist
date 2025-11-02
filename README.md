@@ -1,5 +1,7 @@
 # Multiple Versions Coexist(部分)
 
+包含:选择性接口注入,多同名接口共存,版本管理
+
 SpringBoot-MultiVersion 是一个为 Spring Boot 项目设计的接口版本管理工具的先前版本的部分源码。它允许在同一个项目中同时存在多个相同路径的接口，通过注解和优先级机制来控制注册和访问的接口版本，实现灵活的版本切换和接口覆盖。
 
 SpringBoot-MultiVersion is a partial source code of an earlier version of an interface version management tool designed for Spring Boot projects. It enables the existence of multiple interfaces with the same path in the same project. Through annotations and priority mechanisms, it controls the registration and access of interface versions, achieving flexible version switching and interface override.
