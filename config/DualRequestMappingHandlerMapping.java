@@ -26,15 +26,12 @@ import java.util.List;
 import java.util.Map;
 
 public class DualRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
-    //用于存放<版本名称,接口集合>
     DualMap<String> versionPrefixes = new DualMap<>();
-    //用于存放<接口名称,优先级>
     Map<String, Integer> interfacePriorities = new HashMap<>();
     List<String> FileConfiguration = new ArrayList<>();
     MultiVersionProperties mp;
     public DualRequestMappingHandlerMapping(MultiVersionProperties mp) {
         this.mp = mp;
-        //读取指定路径下的txt文件，并按行转换为List<String>
         if(mp.isFileConfiguration()) {
             Path path = Paths.get(mp.getFilePath());
             try {
@@ -44,12 +41,7 @@ public class DualRequestMappingHandlerMapping extends RequestMappingHandlerMappi
             }
         }
     }
-    /**
-     * &#064;作者:  bailiun
-     * &#064;版本:  1.0.0
-     * &#064;功能:  每几秒检测版本配置文件
-     */
-    @Scheduled(fixedDelayString = "${multi.version.properties.FileRefreshTime}")// 每5秒检查一次
+    @Scheduled(fixedDelayString = "${multi.version.properties.FileRefreshTime}")
     public void watchConfigFile() {
         if (mp.isFileConfiguration()) {
             Path configPath = Paths.get(mp.getFilePath());
@@ -65,11 +57,6 @@ public class DualRequestMappingHandlerMapping extends RequestMappingHandlerMappi
     }
 
 
-    /**
-     * &#064;作者:  bailiun
-     * &#064;版本:  1.0.0
-     * &#064;功能:  可自定义排序规则
-     */
     private boolean SortingMethod(Integer a,Integer b) {
         if ("MAX".equalsIgnoreCase(mp.getSortingMethod())) {
             return a > b;
@@ -79,7 +66,6 @@ public class DualRequestMappingHandlerMapping extends RequestMappingHandlerMappi
         }
         throw new RuntimeException("SortingMethod配置失败");
     }
-    // 接口注入
     @Bean
     @Primary
     @Override
@@ -135,12 +121,10 @@ public class DualRequestMappingHandlerMapping extends RequestMappingHandlerMappi
                             )
                     );
                 } else {
-                    // 当前接口优先级低，不注册
                     System.out.println("忽略低优先级接口:" + newPath + "/--" + ip.value());
                 }
             } else {
                 interfacePriorities.put(newPath, priority);
-                // 为重复路径生成一个独立注册名
                 RequestMappingInfo newMapping = RequestMappingInfo.paths(newPath)
                         .methods(mapping.getMethodsCondition().getMethods().toArray(new RequestMethod[0]))
                         .build();
@@ -149,7 +133,6 @@ public class DualRequestMappingHandlerMapping extends RequestMappingHandlerMappi
             }
         }else {
             interfacePriorities.put(newPath, 0);
-            // 为重复路径生成一个独立注册名
             RequestMappingInfo newMapping = RequestMappingInfo.paths(newPath)
                     .methods(mapping.getMethodsCondition().getMethods().toArray(new RequestMethod[0]))
                     .build();
@@ -158,17 +141,14 @@ public class DualRequestMappingHandlerMapping extends RequestMappingHandlerMappi
         }
     }
 
-    // 审查端口请求
     @Override
     protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
         if ("/error".equals(lookupPath)) {
             return super.lookupHandlerMethod(lookupPath, request);
         }
         System.out.println("接收到请求路径: " + lookupPath);
-        // 获取所有注册的 handler 方法
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = this.getHandlerMethods();
         for (String versionPrefix : versionPrefixes.keySet()) {
-            // 如果原路径未匹配上，则尝试加版本前缀后再匹配
             if (versionPrefixes.get(versionPrefix).contains(lookupPath)) {
                 throw new NoHandlerFoundException(request.getMethod(), lookupPath, new ServletServerHttpRequest(request).getHeaders());
             }
@@ -186,7 +166,6 @@ public class DualRequestMappingHandlerMapping extends RequestMappingHandlerMappi
                 }
             }
         }
-        // 尝试直接匹配原始路径
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
             RequestMappingInfo info = entry.getKey();
             if (info.getPatternsCondition() != null) {
@@ -200,14 +179,11 @@ public class DualRequestMappingHandlerMapping extends RequestMappingHandlerMappi
         throw new NoHandlerFoundException(request.getMethod(), lookupPath, new ServletServerHttpRequest(request).getHeaders());
     }
 
-    /**
-     * 注销指定路径的接口
-     */
+
     public void unregisterPath(String path) {
         getHandlerMethods().keySet().stream()
                 .filter(info -> info.getPatternsCondition() != null &&
                         info.getPatternsCondition().getPatterns().contains(path))
                 .findFirst()
-                .ifPresent(this::unregisterMapping);  // 调用父类的注销方法
-    }
+                .ifPresent(this::unregisterMapping);      }
 }

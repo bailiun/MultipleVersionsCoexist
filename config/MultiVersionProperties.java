@@ -12,21 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * &#064;作者:  bailiun
- * &#064;版本:  1.0.0
- * &#064;功能:  配置注册接口的参数
- */
+
+
 @Configuration
 @ConfigurationProperties(prefix = "multi.version.properties")
 public class MultiVersionProperties {
-    private boolean start;  //指定是否开启多版本注册
-    private List<String> Include;  //指定注册哪些版本
-    private List<String> UnInclude;  //指定不注册哪些版本  IncludeVersions优先级小于UnIncludeVersions
-    private Integer MaxNum;  //规定最多注入几个版本的接口默认10个
-    private String SortingMethod;  //配置版本导入的排序方式ASC为升序,DESC为降序,不区分大小写
-    private boolean FileConfiguration;  //配置是否通过本地文件来控制已经注册的版本的访问
-    private String FilePath;  //FileConfiguration配置的文件路径
+    private boolean start;      private List<String> Include;  
+    private List<String> UnInclude;      private Integer MaxNum;  
+    private String SortingMethod;  
+    private boolean FileConfiguration;  
+    private String FilePath; 
     private Integer FileRefreshTime;
 
     public MultiVersionProperties() {
@@ -54,15 +49,11 @@ public class MultiVersionProperties {
             }
         }
     }
-    /**
-     * &#064;relativeFilePath: 相对路径，例如 "src/main/resources/mvconfig.json" 或 "config/mvconfig.json"
-     */
+
     public static void ensureConfigFileExists(String relativeFilePath) throws IOException {
-        Path fullPath = Paths.get(relativeFilePath);  // 使用相对路径构造 Path
-        Path parentDir = fullPath.getParent();
+        Path fullPath = Paths.get(relativeFilePath);          Path parentDir = fullPath.getParent();
         if (parentDir != null && Files.notExists(parentDir)) {
-            Files.createDirectories(parentDir);  // 创建所有必要的目录
-        }
+            Files.createDirectories(parentDir);         }
 
         if (Files.notExists(fullPath)) {
             Files.createFile(fullPath);
@@ -72,9 +63,7 @@ public class MultiVersionProperties {
         }
     }
 
-    /**
-     * 判断某版本是否允许注册,优先处理黑名单
-     */
+
     public boolean VersionIsOk(String version) {
         if (!UnInclude.isEmpty()) {
             System.err.println("以下版本因在黑名单而未被注册:"+version);

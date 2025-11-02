@@ -13,7 +13,6 @@ public class DualControllerMappingConfig implements WebMvcRegistrations {
     MultiVersionProperties mp;
     @Override
     public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
-        System.out.println("✅ 使用自定义 DualRequestMappingHandlerMapping");
         return new DualRequestMappingHandlerMapping(mp);
     }
 }
