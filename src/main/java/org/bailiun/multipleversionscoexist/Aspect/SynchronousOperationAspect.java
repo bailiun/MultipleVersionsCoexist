@@ -5,7 +5,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.bailiun.multipleversionscoexist.config.OperationCommand;
 import org.bailiun.multipleversionscoexist.config.RetryPolicy;
 import org.bailiun.multipleversionscoexist.config.SynOpeImplementation;
 import org.bailiun.multipleversionscoexist.config.SynchronousOperationAsyncRetryExecutor;
