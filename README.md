@@ -1,3 +1,10 @@
+```java
+<dependency>
+    <groupId>io.github.bailiun</groupId>
+    <artifactId>multiple-versions-coexist</artifactId>
+    <version>1.3.2</version>
+</dependency>
+```
 # Multiple Versions Coexist
 
 ### ⭐ A flexible multi-version coexistence & interface-priority engine for Spring Boot
@@ -26,7 +33,8 @@
 - **想要一个比 Spring AOP 更灵活的增强体系**
 
 那么 `Multiple Versions Coexist` 将极大减少你的复杂度，使项目更加可控与可演化。
-------------
+------
+
 ## 🎯 适用场景
 
 | 场景                            | 传统做法                       | 使用 Multiple Versions Coexist   |
