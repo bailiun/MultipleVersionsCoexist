@@ -53,6 +53,11 @@ public class MultipleVersionsAutoConfiguration {
     public VersionEnvironmentLoader versionEnvironmentLoader() {
         return new VersionEnvironmentLoader();
     }
+    @Bean
+    @ConditionalOnMissingBean
+    public SynOpeImplementationInitialization synOpeImplementationInitialization() {
+        return new SynOpeImplementationInitialization();
+    }
 
 
     @Bean
